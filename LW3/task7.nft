@@ -1,0 +1,8 @@
+#!/usr/sbin/nft -f
+
+table ip nat {
+	chain postrouting {
+		type nat hook postrouting priority filter; policy accept;
+		ip saddr 192.168.32.32 snat to 192.168.32.33;
+	}
+}

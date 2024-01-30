@@ -1,0 +1,8 @@
+#!/usr/sbin/nft -f
+
+table ip filter {
+	chain output {
+		type filter hook output priority 0;
+		oifname "eth1" drop;
+	}
+}

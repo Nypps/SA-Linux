@@ -1,0 +1,19 @@
+#!/usr/sbin/nft -f
+
+table filter {
+	set ports {
+		type inet_service
+		elements = {22, 443}
+	}
+
+	set ip_addrs {
+		type ipv4_addr
+		elements = {192.168.32.34, 192.168.50.35}
+	}
+
+	chain input {
+		type filter hook input priority 0; policy accept;
+		ip saddr @ip_addrs tcp dport @ports drop;
+	}
+}
+
