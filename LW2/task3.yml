@@ -1,4 +1,4 @@
-- name: Install MySQL and settings
+- name: Task3
   hosts: 127.0.0.1
   become: true
   tasks:
