@@ -1,9 +1,9 @@
-- name: Security
+- name: Task6
   hosts: 127.0.0.1
   become: true
   tasks:
 
-    - name: 1.Check /etc/shadow
+    - name: Check /etc/shadow
       shell: stat -c %a /etc/shadow | grep "640"
       register: res_etc_shadow
 
@@ -15,7 +15,7 @@
           {% endif %}
         dest: /home/perm_EtcShadow.txt
 
-    - name: 2. Check suid bit on executables in /
+    - name: Check suid bit on executables in /
       find:
         paths: /
         patterns: '*'
@@ -30,7 +30,7 @@
         content: "{{ suid_files | to_nice_json }}"
         dest: /tmp/suid_files_check.json
 
-    - name: 3. Find PwnKit
+    - name: Find PwnKit
       shell: apt-cache policy policykit-1 | grep "18.04.5"
       register: pwnkit_ver
       ignore_errors: true
@@ -45,7 +45,7 @@
       register: cve_5195
       ignore_errors: true
 
-    - name: Save cve's files
+    - name: Save results to a file
       copy:
         content: |
           {% if pwnkit_ver.stdout != ""%}
