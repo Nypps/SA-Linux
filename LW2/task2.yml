@@ -1,4 +1,4 @@
-- name: Create user and add to sudoers
+- name: Task2
   hosts: 127.0.0.1
   become: true
   vars:
