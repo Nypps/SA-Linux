@@ -1,13 +1,13 @@
-- name: Install nginx and settings
+- name: Task1
   hosts: 127.0.0.1
   become: true
   tasks:
-    - name: install nginx
+    - name: Install nginx
       apt:
         name: nginx
         state: latest
 
-    - name: settings nginx
+    - name: Settings nginx
       template:
         remote_src: true
         src: /etc/nginx/nginx.conf
