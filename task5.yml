@@ -1,0 +1,10 @@
+- name: Cronjob
+  hosts: 127.0.0.1
+  become: true
+  tasks:
+    - name: Job
+      ansible.builtin.cron:
+        name: "good morning"
+        job: "echo Good Morning!"
+        hour: "10"
+        minute: "30"

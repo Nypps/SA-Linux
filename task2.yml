@@ -1,0 +1,19 @@
+- name: Create user and add to sudoers
+  hosts: 127.0.0.1
+  become: true
+  vars:
+    username: 'usr'
+    passw: 'pa$$w0rd'
+  tasks:
+    - name: Create user
+      user:
+        name: "{{username}}"
+        password: "{{passw | password_hash('sha512') }}"
+
+
+    - name: Add to sudoers
+      lineinfile:
+        path: /etc/sudoers
+        line: "{{ username }} ALL=(ALL) NOPASSWD:ALL"
+        validate: "visudo -cf %s"
+
