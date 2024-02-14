@@ -1,0 +1,70 @@
+- name: Task6
+  hosts: 127.0.0.1
+  become: true
+  tasks:
+
+    - name: Check /etc/shadow
+      shell: stat -c %a /etc/shadow | grep "640"
+      register: res_etc_shadow
+
+    - name: Save results to a file
+      copy:
+        content: |
+          {% if res_etc_shadow.stdout != "" %}
+            "File /etc/shadow has ivalid perm"
+          {% endif %}
+        dest: /home/perm_EtcShadow.txt
+
+    - name: Check suid bit on executables in /
+      find:
+        paths: /
+        patterns: '*'
+        file_type: file
+        use_regex: false
+        recurse: true
+        get_checksum: true
+      register: suid_files
+
+    - name: Save results to a file
+      copy:
+        content: "{{ suid_files | to_nice_json }}"
+        dest: /tmp/suid_files_check.json
+
+    - name: Find PwnKit
+      shell: apt-cache policy policykit-1 | grep "18.04.5"
+      register: pwnkit_ver
+      ignore_errors: true
+
+    - name: Find CVE-2022-0847
+      shell: uname -rs | grep -E '5\.8\.|5\.9|5\.1[0-5]'
+      register: cve_0847
+      ignore_errors: true
+
+    - name: Find CVE-2016-5195
+      shell: uname -rs | grep -E '2\.6\.3[89]|4\.[0-9]|4\.1[0-4]'
+      register: cve_5195
+      ignore_errors: true
+
+    - name: Save results to a file
+      copy:
+        content: |
+          {% if pwnkit_ver.stdout != ""%}
+            "Pwnkit is in this host"
+          {% endif %}
+          {% if cve_0847.stdout != "" %}
+            "CVE-2022-0847 is on this host"
+          {% endif %}
+          {% if cve_5195.stdout != "" %}
+            "CVE-2016-5195 is on this host"
+          {% endif %}
+        dest: /home/CVE.txt
+
+    - name: Check sshd_config
+      shell: grep -e "PermitRootLogin yes" -e "PermitEmptyPasswords yes" /etc/ssh/sshd_config
+      register: sshd_config_check
+      ignore_errors: true
+
+    - name: Save results to a file
+      copy:
+        content: "{{ sshd_config_check.stdout }}"
+        dest: /tmp/sshd_config_check.txt
