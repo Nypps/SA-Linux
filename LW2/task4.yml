@@ -1,4 +1,4 @@
-- name: deploy httpd on container
+- name: Task4
   hosts: 127.0.0.1
   become: true
   tasks:
@@ -20,12 +20,12 @@
         name: docker
         state: present
 
-    - name: start docker
+    - name: Start docker
       service:
         name: docker
         state: started
 
-    - name: pull image
+    - name: Pull image
       community.docker.docker_image:
         name: httpd:latest
         source: pull
